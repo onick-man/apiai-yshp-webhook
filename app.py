@@ -129,7 +129,7 @@ class RankingCategory(Search):
         return request_url
 
 
-class Sample(RankingAll):
+class Sample(RankingCategory):
 
     def __init__(self):
         param = {"appid":""}
