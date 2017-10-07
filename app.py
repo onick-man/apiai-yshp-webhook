@@ -30,8 +30,6 @@ def webhook():
 def processRequest(req):
     if req.get("result").get("action") == "yahooShoppingSearch":
         r = Search(req)
-    elif req.get("result").get("action") == "yahooShoppingRankingAll":
-        r = RankingAll(req)
     elif req.get("result").get("action") == "yahooShoppingRankingCategory":
         r = RankingCategory(req)
     else:
@@ -105,25 +103,6 @@ class Search(YahooShopping):
             "displayText": speech,
             "source": "apiai-yshp-webhook"
         }
-
-
-class RankingAll(Search):
-
-    def parseParameter(self, req):
-        result = req.get("result")
-        parameters = result.get("parameters")
-        appid = parameters.get("appid")
-        if (appid is None):
-            return None
-
-        parameter = {"appid":appid}
-
-        return parameter
-
-    def generateRequestUrl(self, param):
-        baseurl = "https://shopping.yahooapis.jp/ShoppingWebService/V1/json/categoryRanking?"
-        request_url = baseurl + urllib.parse.urlencode(param)
-        return request_url
 
 
 class RankingCategory(Search):
