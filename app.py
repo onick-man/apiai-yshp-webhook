@@ -14,15 +14,16 @@ app = Flask(__name__)
 
 @app.route('/webhook', methods=['POST'])
 def webhook():
-    req = request.get_json(silent=True, force=True)
+    #req = request.get_json(silent=True, force=True)
 
-    print("Request:")
-    print(json.dumps(req, indent=4))
+    #print("Request:")
+    #print(json.dumps(req, indent=4))
 
-    res = processRequest(req)
+    #res = processRequest(req)
 
-    res = json.dumps(res, indent=4)
-    # print(res)
+    #res = json.dumps(res, indent=4)
+    res = ""
+    print(res)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
@@ -62,29 +63,29 @@ def makeRequestParameter(req):
 
 
 def makeWebhookResult(data):
-    result_set = data.get('ResultSet')
-    if result_set is None:
-        return {}
+    #result_set = data.get('ResultSet')
+    #if result_set is None:
+    #    return {}
 
-    result = result_set.get('result')
-    if result is None:
-        return {}
+    #result = result_set.get('result')
+    #if result is None:
+    #    return {}
 
-    hit = result[0]
-    if hit is None:
-        return {}
+    #hit = result[0]
+    #if hit is None:
+    #    return {}
 
-    name = hit.get('Name')
-    headline = hit.get('Headline')
-    if (name is None) or (headline is None):
-        return {}
+    #name = hit.get('Name')
+    #headline = hit.get('Headline')
+    #if (name is None) or (headline is None):
+    #    return {}
 
     # print(json.dumps(item, indent=4))
 
-    speech = name + "の商品が見つかりました"
+    #speech = name + "の商品が見つかりました"
 
-    print("Response:")
-    print(speech)
+    #print("Response:")
+    #print(speech)
 
 
     speech = "ほげほげ
