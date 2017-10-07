@@ -1,2 +1,3 @@
-# api.aiでyahooo!ショッピング
+# API.AIでYahooo!ショッピング
 
+API.AIでYahoo!ショッピングするためのHerokuようリポジトリ
