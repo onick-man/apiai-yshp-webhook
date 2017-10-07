@@ -36,10 +36,10 @@ def processRequest(req):
     param = makeRequestParameter(req)
     if param is None:
         return {}
-    request_url = baseurl + urllib.urlencode(param)
+    request_url = baseurl + urllib.parse.urlencode(param)
     print(request_url)
 
-    result = urllib.urlopen(request_url).read()
+    result = urllib.request.urlopen(request_url).read()
     print("result: ")
     print(result)
 
