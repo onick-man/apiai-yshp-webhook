@@ -32,6 +32,8 @@ def processRequest(req):
         r = Search(req)
     elif req.get("result").get("action") == "yahooShoppingRankingAll":
         r = RankingAll(req)
+    elif req.get("result").get("action") == "yahooShoppingRankingCategory":
+        r = RankingCategory(req)
     else:
         return {}
 
@@ -115,6 +117,30 @@ class RankingAll(Search):
             return None
 
         parameter = {"appid":appid}
+
+        return parameter
+
+    def generateRequestUrl(self, param):
+        baseurl = "https://shopping.yahooapis.jp/ShoppingWebService/V1/json/categoryRanking?"
+        request_url = baseurl + urllib.parse.urlencode(param)
+        return request_url
+
+
+class RankingCategory(Search):
+
+    def parseParameter(self, req):
+        result = req.get("result")
+        parameters = result.get("parameters")
+        appid = parameters.get("appid")
+        if (appid is None):
+            return None
+
+        parameter = {"appid":appid}
+
+        for key in ["category_id", "gender", "generation", "type"]:
+            val = parameters.get(key)
+            if val:
+                parameter[key] = val
 
         return parameter
 
