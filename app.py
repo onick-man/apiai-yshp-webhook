@@ -135,8 +135,8 @@ class Sample(RankingAll):
 
 
 if __name__ == '__main__':
-    r = Sample()
-    print(r.res)
+    #r = Sample()
+    #print(r.res)
 
     port = int(os.getenv('PORT', 5000))
 
