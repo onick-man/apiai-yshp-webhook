@@ -90,6 +90,7 @@ def makeWebhookResult(data):
     return {
         "speech": speech,
         "displayText": speech,
+        "data": {},
         "source": "apiai-yshp-webhook"
     }
 
