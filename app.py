@@ -88,8 +88,8 @@ def makeWebhookResult(data):
     #print(speech)
 
 
-    speech = "ほげほげ
-"
+    speech = "ほげほげ"
+
     return {
         "speech": speech,
         "displayText": speech,
