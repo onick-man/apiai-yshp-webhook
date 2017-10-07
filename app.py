@@ -66,21 +66,45 @@ def makeRequestParameter(req):
 def makeWebhookResult(data):
     result_set = data.get('ResultSet')
     if result_set is None:
-        return {}
+        speech = "miss parse 1"
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "source": "apiai-yshp-webhook"
+        }
+        #return {}
 
     result = result_set.get('0')
     result = result.get('Result')
     if result is None:
-        return {}
+        speech = "miss parse 2"
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "source": "apiai-yshp-webhook"
+        }
+        #return {}
 
     hit = result["0"]
     if hit is None:
-        return {}
+        speech = "miss parse 3"
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "source": "apiai-yshp-webhook"
+        }
+        #return {}
 
     name = hit.get('Name')
     headline = hit.get('Headline')
     if (name is None) or (headline is None):
-        return {}
+        speech = "miss parse 4"
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "source": "apiai-yshp-webhook"
+        }
+        #return {}
 
     speech = name + "の商品が見つかりました"
 
@@ -90,7 +114,6 @@ def makeWebhookResult(data):
     return {
         "speech": speech,
         "displayText": speech,
-        "data": {},
         "source": "apiai-yshp-webhook"
     }
 
