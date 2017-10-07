@@ -97,7 +97,7 @@ class Search(YahooShopping):
         if (name is None) or (headline is None):
             return {}
 
-        speech = name + "、の商品が見つかりました"
+        speech = name + "、の商品はいかがですか"
 
         return {
             "speech": speech,
@@ -115,8 +115,7 @@ class RankingAll(Search):
         if (appid is None):
             return None
 
-        parameter = {"appid":appid,
-                     "hits":1}
+        parameter = {"appid":appid}
 
         return parameter
 
