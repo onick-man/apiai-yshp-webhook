@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import urllib
+import urllib.request, urllib.parse
 import json
 import os
 
@@ -19,8 +19,8 @@ def webhook():
     print("Request:")
     print(json.dumps(req, indent=4))
 
-    #res = processRequest(req)
-    res = makeWebhookResult("")
+    res = processRequest(req)
+    #res = makeWebhookResult("")
 
     res = json.dumps(res, indent=4)
     #print(res)
@@ -33,10 +33,10 @@ def processRequest(req):
     if req.get("result").get("action") != "yahooShoppingSearch":
         return {}
     baseurl = "https://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?"
-    query = makeQuery(req)
-    if query is None:
+    param = makeRequestParameter(req)
+    if param is None:
         return {}
-    request_url = baseurl + urllib.urlencode(query)
+    request_url = baseurl + urllib.urlencode(param)
     print(request_url)
 
     result = urllib.urlopen(request_url).read()
@@ -57,38 +57,35 @@ def makeRequestParameter(req):
         return None
 
     parameter = {"appid":appid,
-                 "query":query}
+                 "query":query,
+                 "hits":1}
 
     return parameter
 
 
 def makeWebhookResult(data):
-    #result_set = data.get('ResultSet')
-    #if result_set is None:
-    #    return {}
+    result_set = data.get('ResultSet')
+    if result_set is None:
+        return {}
 
-    #result = result_set.get('result')
-    #if result is None:
-    #    return {}
+    result = result_set.get('0')
+    result = result.get('Result')
+    if result is None:
+        return {}
 
-    #hit = result[0]
-    #if hit is None:
-    #    return {}
+    hit = result["0"]
+    if hit is None:
+        return {}
 
-    #name = hit.get('Name')
-    #headline = hit.get('Headline')
-    #if (name is None) or (headline is None):
-    #    return {}
+    name = hit.get('Name')
+    headline = hit.get('Headline')
+    if (name is None) or (headline is None):
+        return {}
 
-    # print(json.dumps(item, indent=4))
+    speech = name + "の商品が見つかりました"
 
-    #speech = name + "の商品が見つかりました"
-
-    #print("Response:")
-    #print(speech)
-
-
-    speech = "ほげほげ"
+    print("Response:")
+    print(speech)
 
     return {
         "speech": speech,
