@@ -93,8 +93,7 @@ class Search(YahooShopping):
             return {}
 
         name = hit.get('Name')
-        headline = hit.get('Headline')
-        if (name is None) or (headline is None):
+        if (name is None):
             return {}
 
         speech = name + "、の商品はいかがですか"
@@ -125,7 +124,20 @@ class RankingAll(Search):
         return request_url
 
 
+class Sample(RankingAll):
+
+    def __init__(self):
+        param = {"appid":""}
+        request_url = self.generateRequestUrl(param)
+        result = urllib.request.urlopen(request_url).read()
+        data = json.loads(result)
+        self.res = self.makeWebhookResult(data)
+
+
 if __name__ == '__main__':
+    r = Sample()
+    print(r.res)
+
     port = int(os.getenv('PORT', 5000))
 
     print("Starting app on port %d" % port)
