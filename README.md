@@ -1,0 +1,2 @@
+# api.aiでyahooo!ショッピング
+
