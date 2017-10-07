@@ -106,7 +106,7 @@ def makeWebhookResult(data):
         }
         #return {}
 
-    speech = name + "の商品が見つかりました"
+    speech = name + "、の商品が見つかりました"
 
     print("Response:")
     print(speech)
