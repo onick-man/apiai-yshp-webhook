@@ -78,7 +78,7 @@ class Search(YahooShopping):
         request_url = baseurl + urllib.parse.urlencode(param)
         return request_url
 
-    def makeWebhookResult(self. data):
+    def makeWebhookResult(self, data):
         result_set = data.get('ResultSet')
         if result_set is None:
             return {}
