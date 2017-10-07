@@ -12,8 +12,7 @@ from flask import make_response
 app = Flask(__name__)
 
 
-#@app.route('/webhook', methods=['POST'])
-@app.route('/webhook')
+@app.route('/webhook', methods=['POST'])
 def webhook():
     #req = request.get_json(silent=True, force=True)
 
@@ -31,7 +30,7 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "yahooShoppungSearch":
+    if req.get("result").get("action") != "yahooShoppingSearch":
         return {}
     baseurl = "https://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?"
     query = makeQuery(req)
