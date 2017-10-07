@@ -53,7 +53,7 @@ class YahooShopping(object):
     def generateRequestUrl(self, param):
         pass
 
-    def makeWebhookResult(self. data):
+    def makeWebhookResult(self, data):
         pass
 
 
