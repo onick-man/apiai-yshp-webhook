@@ -20,10 +20,8 @@ def webhook():
     print(json.dumps(req, indent=4))
 
     res = processRequest(req)
-    #res = makeWebhookResult("")
 
     res = json.dumps(res, indent=4)
-    #print(res)
     r = make_response(res)
     r.headers['Content-Type'] = 'application/json'
     return r
@@ -66,45 +64,21 @@ def makeRequestParameter(req):
 def makeWebhookResult(data):
     result_set = data.get('ResultSet')
     if result_set is None:
-        speech = "miss parse 1"
-        return {
-            "speech": speech,
-            "displayText": speech,
-            "source": "apiai-yshp-webhook"
-        }
-        #return {}
+        return {}
 
     result = result_set.get('0')
     result = result.get('Result')
     if result is None:
-        speech = "miss parse 2"
-        return {
-            "speech": speech,
-            "displayText": speech,
-            "source": "apiai-yshp-webhook"
-        }
-        #return {}
+        return {}
 
     hit = result["0"]
     if hit is None:
-        speech = "miss parse 3"
-        return {
-            "speech": speech,
-            "displayText": speech,
-            "source": "apiai-yshp-webhook"
-        }
-        #return {}
+        return {}
 
     name = hit.get('Name')
     headline = hit.get('Headline')
     if (name is None) or (headline is None):
-        speech = "miss parse 4"
-        return {
-            "speech": speech,
-            "displayText": speech,
-            "source": "apiai-yshp-webhook"
-        }
-        #return {}
+        return {}
 
     speech = name + "、の商品が見つかりました"
 
