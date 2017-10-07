@@ -28,71 +28,121 @@ def webhook():
 
 
 def processRequest(req):
-    if req.get("result").get("action") != "yahooShoppingSearch":
-        return {}
-    baseurl = "https://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?"
-    param = makeRequestParameter(req)
-    if param is None:
-        return {}
-    request_url = baseurl + urllib.parse.urlencode(param)
-    print(request_url)
-
-    result = urllib.request.urlopen(request_url).read()
-    print("result: ")
-    print(result)
-
-    data = json.loads(result)
-    res = makeWebhookResult(data)
-    return res
-
-
-def makeRequestParameter(req):
-    result = req.get("result")
-    parameters = result.get("parameters")
-    query = parameters.get("query")
-    appid = parameters.get("appid")
-    if (query is None) or (appid is None):
-        return None
-
-    parameter = {"appid":appid,
-                 "query":query,
-                 "hits":1}
-
-    return parameter
-
-
-def makeWebhookResult(data):
-    result_set = data.get('ResultSet')
-    if result_set is None:
+    if req.get("result").get("action") == "yahooShoppingSearch":
+        r = Search(req)
+    elif req.get("result").get("action") == "yahooShoppingRankingCategory":
+        r = RankingCategory(req)
+    else:
         return {}
 
-    result = result_set.get('0')
-    result = result.get('Result')
-    if result is None:
-        return {}
+    return r.res
 
-    hit = result["0"]
-    if hit is None:
-        return {}
 
-    name = hit.get('Name')
-    headline = hit.get('Headline')
-    if (name is None) or (headline is None):
-        return {}
+class YahooShopping(object):
 
-    speech = name + "、の商品が見つかりました"
+    def __init__(self, req):
+        param = self.parseParameter(req)
+        request_url = self.generateRequestUrl(param)
+        result = urllib.request.urlopen(request_url).read()
+        data = json.loads(result)
+        self.res = self.makeWebhookResult(data)
 
-    print("Response:")
-    print(speech)
+    def parseParameter(self, req):
+        pass
 
-    return {
-        "speech": speech,
-        "displayText": speech,
-        "source": "apiai-yshp-webhook"
-    }
+    def generateRequestUrl(self, param):
+        pass
+
+    def makeWebhookResult(self, data):
+        pass
+
+
+class Search(YahooShopping):
+
+    def parseParameter(self, req):
+        result = req.get("result")
+        parameters = result.get("parameters")
+        appid = parameters.get("appid")
+        query = parameters.get("query")
+        if (appid is None) or (query is None):
+            return None
+
+        parameter = {"appid":appid,
+                     "query":query,
+                     "hits":1}
+
+        return parameter
+
+    def generateRequestUrl(self, param):
+        baseurl = "https://shopping.yahooapis.jp/ShoppingWebService/V1/json/itemSearch?"
+        request_url = baseurl + urllib.parse.urlencode(param)
+        return request_url
+
+    def makeWebhookResult(self, data):
+        result_set = data.get('ResultSet')
+        if result_set is None:
+            return {}
+
+        result = result_set.get('0')
+        result = result.get('Result')
+        if result is None:
+            return {}
+
+        hit = result["0"]
+        if hit is None:
+            return {}
+
+        name = hit.get('Name')
+        if (name is None):
+            return {}
+
+        speech = name + "、の商品はいかがですか"
+
+        return {
+            "speech": speech,
+            "displayText": speech,
+            "source": "apiai-yshp-webhook"
+        }
+
+
+class RankingCategory(Search):
+
+    def parseParameter(self, req):
+        result = req.get("result")
+        parameters = result.get("parameters")
+        appid = parameters.get("appid")
+        if (appid is None):
+            return None
+
+        parameter = {"appid":appid}
+
+        for key in ["category_id", "gender", "generation", "type"]:
+            val = parameters.get(key)
+            if val:
+                parameter[key] = val
+
+        return parameter
+
+    def generateRequestUrl(self, param):
+        baseurl = "https://shopping.yahooapis.jp/ShoppingWebService/V1/json/categoryRanking?"
+        request_url = baseurl + urllib.parse.urlencode(param)
+        return request_url
+
+
+class Sample(RankingCategory):
+
+    def __init__(self):
+        param = {"appid":""}
+        request_url = self.generateRequestUrl(param)
+        result = urllib.request.urlopen(request_url).read()
+        data = json.loads(result)
+        self.res = self.makeWebhookResult(data)
 
 
 if __name__ == '__main__':
+    #r = Sample()
+    #print(r.res)
+
     port = int(os.getenv('PORT', 5000))
 
     print("Starting app on port %d" % port)
